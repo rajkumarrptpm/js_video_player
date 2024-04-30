@@ -1,6 +1,7 @@
 let playBtn = document.getElementById('play-btn');
 let video = document.querySelector('.video');
-let progressBar = document.querySelector('.progress-bar')
+let progressBar = document.querySelector('.progress-bar');
+let  progressRange = document.querySelector('.progress-range');
 
 let isVideoPlaying = false;
 
@@ -30,12 +31,24 @@ function playOrPauseSpace(event){
 
 
 function updateProgressbar(event){
-    console.log(event.target.currentTime,event.target.duration);
+    let currentTime = event.target.currentTime;
+    let duration = event.target.duration;
     progressBar.style.cssText =`
-    width: ${((event.target.currentTime/event.target.duration)*100)}%;
+    width: ${(currentTime/duration)*100}%;
 
     `;
 
+}
+
+function updateSeekBar(event){
+    let calculateWidth = progressRange.getBoundingClientRect();
+    console.log(calculateWidth);
+    // console.log(event.target);
+    let currentPoint = event.offsetX;
+    // let progressbarWidth = event.target.clientWidth;
+    let progressbarWidth = this.clientWidth;// using this method(1st)
+    let currentRange = (currentPoint / progressbarWidth) * video.duration;
+    video.currentTime = currentRange;
 }
 
 
@@ -45,4 +58,5 @@ video.addEventListener('click',playOrPauseVideo);
 document.addEventListener('keydown',playOrPauseSpace);
 
 // progress bar
-video.addEventListener('timeupdate',updateProgressbar)
+video.addEventListener('timeupdate',updateProgressbar);
+progressRange.addEventListener('click',updateSeekBar);
